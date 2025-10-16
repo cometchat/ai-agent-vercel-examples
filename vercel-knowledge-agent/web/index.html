@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/@cometchat/chat-embed@1.x.x/dist/main.js"></script>
+</head>
+<body>
+    <div id="cometChatMount"></div>
+
+<script>
+  const COMETCHAT_CREDENTIALS = {
+    appID: "",
+    appRegion: "",
+    authKey: "",
+  };
+
+  const COMETCHAT_LAUNCH_OPTIONS = {
+    targetElementID: 'cometChatMount',  // Element ID to mount the widget
+    isDocked: true, // true = floating bubble, false = embedded
+    width: '450px', // Widget width
+    height: '80vh',  // Widget height
+    chatType: "user",
+    defaultChatID: "",  // Agent ID to open chat by default
+    variantID: "",  // Variant configuration ID
+
+    // Optional advanced settings:
+    // dockedAlignment: "right",  // For docked mode: "left" or "right"
+  }
+
+  const COMETCHAT_USER_UID = ""; // Replace with your actual user UID
+
+  window.addEventListener("DOMContentLoaded", () => {
+    CometChatApp.init(COMETCHAT_CREDENTIALS)
+      .then(() => {
+        console.log("[CometChat] Initialized successfully");
+        return CometChatApp.login({ uid: COMETCHAT_USER_UID });
+      })
+      .then(user => {
+        console.log("[CometChat] Logged in as:", user);
+        return CometChatApp.launch(COMETCHAT_LAUNCH_OPTIONS);
+      })
+      .then(() => {
+        console.log("[CometChat] Chat launched!");
+      })
+      .catch(error => {
+        console.error("[CometChat] Error:", error);
+      });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# environment files
+.env
+.env.*
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# builds and coverage
+dist/
+build/
+.vercel/
+coverage/
+
+# misc
+.DS_Store
+.vscode/
