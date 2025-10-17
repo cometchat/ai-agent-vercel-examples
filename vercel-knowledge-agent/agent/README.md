@@ -1,50 +1,44 @@
-# Knowledge Agent (Vercel AI SDK)
+# Knowledge Agent (AG2)
 
-Express service that combines the Vercel AI SDK with a local knowledge base so you can ingest documentation, search it, and chat with a grounded assistant. The project also keeps the original weather demo endpoint for reference.
+Express service that combines the Vercel AI SDK “AG2” stack with a local knowledge base so you can ingest documentation, search it, and chat with a grounded assistant. The project mirrors `mastra-knowledge-agent`, retains the weather demo for parity, and adds a CometChat-compatible streaming endpoint.
 
 ## Prerequisites
 
-- Node.js 18 or newer
-- `OPENAI_API_KEY` available in your environment or a local `.env`
+- Node.js 18+
+- `OPENAI_API_KEY`
+- Optional: `PORT` (defaults to `3000`)
 
-Install dependencies once:
+## Setup
 
 ```bash
+cd vercel-knowledge-agent/agent
 npm install
 ```
 
-## Run the Server
-
-Create `.env` in the project root:
+Create `.env` (or export the variables):
 
 ```
 OPENAI_API_KEY=sk-...
-# Optional
-PORT=4000
+PORT=3000
 ```
 
-Start the app:
+Start the server:
 
 ```bash
 npm start
 ```
 
-The server listens on `http://localhost:3000` by default.
-
 ## Knowledge Base Layout
 
-Documents live under `knowledge/<namespace>`. Markdown, MDX, and TXT files are indexed. A sample file ships in `knowledge/default/` to keep the default namespace warm.
+Markdown/MDX/TXT files are stored under `knowledge/<namespace>`. A starter file lives in `knowledge/default/`. Use the `namespace` field in requests to target specific collections; omitting it falls back to `default`.
 
-- Provide `namespace` in requests to route content
-- Omit it to fall back to `default`
+## REST APIs (`/api`)
 
-## APIs
+- `POST /tools/ingest` — Ingest URLs, text snippets, or uploaded files (PDF, Markdown, TXT). Response reports `saved`, `skipped`, and `errors`.
+- `POST /tools/searchDocs` — Semantic search across the knowledge base.
+- `POST /agents/knowledge/generate` — Non-streaming chat that returns `answer`, `toolResults`, and `usage`.
 
-Base path: `http://localhost:3000/api`
-
-### `POST /tools/ingest`
-
-Add URLs, plain text, or markdown into a namespace.
+Example ingestion request:
 
 ```bash
 curl -s -X POST http://localhost:3000/api/tools/ingest \
@@ -62,52 +56,23 @@ curl -s -X POST http://localhost:3000/api/tools/ingest \
       }'
 ```
 
-Response lists saved files plus any per-source errors. HTML pages are converted to markdown; other text types are stored as-is.
+## Streaming Agent (`POST /agent`)
 
-Upload files (PDF, Markdown, or TXT) with multipart form data:
+The `/agent` route streams Server-Sent Events compatible with the CometChat adapter used in the original Mastra demo. Provide CometChat-formatted messages and optional tools; you’ll receive incremental events (text deltas, tool calls/results, finish markers).
 
-```bash
-curl -s -X POST http://localhost:3000/api/tools/ingest \
-  -F namespace=docs \
-  -F files=@/path/to/guide.pdf \
-  -F files=@/path/to/readme.md
-```
-
-The ingester extracts text from PDFs, enforces a 6 MB upload limit (and 200 kB per text source), deduplicates identical content, and reports `saved`, `skipped`, and `errors` with counts.
-
-### `POST /tools/searchDocs`
-
-Retrieve relevant snippets.
+Quick curl to observe the stream:
 
 ```bash
-curl -s -X POST http://localhost:3000/api/tools/searchDocs \
-  -H "Content-Type: application/json" \
-  -d '{"query":"Explain the ingestion flow","namespace":"docs","maxResults":3}'
-```
-
-Returns scored hits with short excerpts and the file names used as citations.
-
-### `POST /agents/knowledge/generate`
-
-Chat with the assistant.
-
-```bash
-curl -s -X POST http://localhost:3000/api/agents/knowledge/generate \
+curl -N http://localhost:3000/agent \
   -H "Content-Type: application/json" \
   -d '{
         "messages": [
-          { "role": "user", "content": "Summarize the docs ingestion flow" }
+          { "role": "user", "content": "Summarize the ingestion workflow." }
         ],
         "toolParams": { "namespace": "docs" }
       }'
 ```
 
-Response includes the grounded answer, tool call traces, and token usage.
+## Weather Demo (Legacy)
 
-## Weather Demo (legacy)
-
-The original weather example is still available:
-
-- `POST /weather` with `{ "query": "Weather in Tokyo" }`
-
-It uses `Experimental_Agent` with a single tool that calls the Open-Meteo API.
+`POST /weather` accepts `{ "query": "Weather in Tokyo" }` and uses an `Experimental_Agent` tool that calls the Open-Meteo API. It remains for parity with the starter Express scaffold.
