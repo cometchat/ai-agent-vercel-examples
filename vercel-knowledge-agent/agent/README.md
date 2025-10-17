@@ -1,6 +1,6 @@
-# Knowledge Agent (AG2)
+# Knowledge Agent
 
-Express service that combines the Vercel AI SDK “AG2” stack with a local knowledge base so you can ingest documentation, search it, and chat with a grounded assistant. The project mirrors `mastra-knowledge-agent`, retains the weather demo for parity, and adds a CometChat-compatible streaming endpoint.
+Express service that combines the Vercel AI SDK stack with a local knowledge base so you can ingest documentation, search it, and chat with a grounded assistant. The project retains the weather demo for parity and adds a CometChat-compatible streaming endpoint.
 
 ## Prerequisites
 
@@ -58,7 +58,7 @@ curl -s -X POST http://localhost:3000/api/tools/ingest \
 
 ## Streaming Agent (`POST /agent`)
 
-The `/agent` route streams Server-Sent Events compatible with the CometChat adapter used in the original Mastra demo. Provide CometChat-formatted messages and optional tools; you’ll receive incremental events (text deltas, tool calls/results, finish markers).
+The `/agent` route streams Server-Sent Events compatible with the CometChat adapter showcased in the Vercel examples. Provide CometChat-formatted messages and optional tools; you’ll receive incremental events (text deltas, tool calls/results, finish markers).
 
 Quick curl to observe the stream:
 

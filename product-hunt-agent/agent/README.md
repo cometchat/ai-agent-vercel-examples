@@ -1,6 +1,6 @@
-# Product Hunt Agent (AG2)
+# Product Hunt Agent
 
-Express service that wraps the AG2 `Experimental_Agent` to deliver a Product Hunt assistant backed by live tools. The project mirrors the Mastra demo but is implemented with the Vercel AI SDK stack used in this repo.
+Express service that wraps the Vercel AI SDK `Experimental_Agent` to deliver a Product Hunt assistant backed by live tools. The project mirrors the Product Hunt demo flow from the Vercel agent examples and stays aligned with the stack used throughout this repo.
 
 The agent can:
 
@@ -75,7 +75,7 @@ curl -N http://localhost:3000/agent \
 
 ## Agent Details
 
-`lib/producthunt/agent.js` wires an AG2 `Experimental_Agent` with four tools:
+`lib/producthunt/agent.js` wires an `Experimental_Agent` with four tools:
 
 - `getTopProducts` — top posts by total votes.
 - `getTopProductsByTimeframe` — timeframe + timezone aware rankings.

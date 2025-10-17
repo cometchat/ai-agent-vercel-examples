@@ -1,6 +1,6 @@
-# Vercel AI SDK AG2 Agent Examples
+# Vercel AI SDK Agent Examples
 
-Port of CometChat’s Mastra agent demos to the Vercel AI SDK “AG2” runtime. The repository hosts two Express applications that showcase how to stand up tool-enabled agents and connect them to CometChat or any other SSE-capable client.
+The repository hosts two Express applications that showcase how to stand up tool-enabled agents and connect them to CometChat or any other SSE-capable client.
 
 - `vercel-knowledge-agent` — Knowledge-base grounded assistant with ingestion, search, and an SSE `/agent` endpoint.
 - `product-hunt-agent` — Product Hunt launch assistant that surfaces top posts, Algolia search results, and celebration actions.
@@ -13,7 +13,7 @@ Both services share the same Express + Jade skeleton, exposing REST APIs under `
 - `OPENAI_API_KEY` with access to GPT-4o or compatible models
 - Optional: `PRODUCTHUNT_API_TOKEN` (needed for Product Hunt GraphQL calls)
 
-Clone this repo next to the original Mastra examples so you can compare implementations:
+Clone the repository:
 
 ```bash
 git clone https://github.com/cometchat/ai-agent-vercel-examples.git
@@ -23,7 +23,7 @@ git clone https://github.com/cometchat/ai-agent-vercel-examples.git
 
 | Folder | Description |
 | --- | --- |
-| `vercel-knowledge-agent/agent` | Knowledge agent API + SSE endpoint, ported from `mastra-knowledge-agent`. |
+| `vercel-knowledge-agent/agent` | Knowledge agent API + SSE endpoint with ingestion and search workflows. |
 | `vercel-knowledge-agent/web` | Static demo page that can be wired to CometChat. |
 | `product-hunt-agent/agent` | Product Hunt agent API + SSE endpoint, ported from `product-hunt-agent`. |
 | `product-hunt-agent/web` | Product Hunt mock landing page with CometChat embed and API helpers. |
@@ -85,7 +85,3 @@ Both `/web` directories contain static pages with the CometChat Chat Embed widge
 ```
 
 The widgets point to the SSE `/agent` routes provided by these services.
-
-## Relationship to Mastra Examples
-
-The original Mastra implementations live in [`cometchat/ai-agent-mastra-examples`](https://github.com/cometchat/ai-agent-mastra-examples). This repo mirrors the same functionality, but swaps the Mastra runner for the Vercel AI SDK “AG2” primitives (`Experimental_Agent`, `tool`, etc.). Use it as a reference when porting other agents or mixing tooling between the two ecosystems.
