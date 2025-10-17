@@ -17,15 +17,14 @@ The agent can:
   - `PRODUCTHUNT_API_TOKEN` — optional GraphQL token (endpoints return empty arrays if omitted).
   - `PORT` (optional) — defaults to `3000`.
 
-Install dependencies once:
+## Setup
 
 ```bash
+cd product-hunt-agent/agent
 npm install
 ```
 
-## Run the Server
-
-Create `.env`:
+Create `.env` (or export the variables):
 
 ```
 OPENAI_API_KEY=sk-...
@@ -33,13 +32,13 @@ PRODUCTHUNT_API_TOKEN=phc_...
 PORT=3000
 ```
 
-Start the app:
+Launch the server:
 
 ```bash
 npm start
 ```
 
-The HTTP API listens on `http://localhost:3000` (or `PORT`).
+By default the app listens on `http://localhost:3000`.
 
 ## API
 
@@ -50,12 +49,29 @@ All responses include permissive CORS headers for local demos.
 - `GET /api/top-week?limit=3&days=7` → rolling-window ranking (default 7 days)
 - `GET /api/top-range?timeframe=today&tz=America/New_York&limit=3` → timeframe-aware ranking
   - Timeframes: `today`, `yesterday`, `this-week`, `last-week`, `this-month`, `last-month`, `YYYY-MM-DD`, or ranges such as `from:2024-08-01 to:2024-08-15`
-- `GET /api/search?q=arc&type=product&limit=10` → Algolia-backed search hits
+- `GET /api/search?q=arc&limit=10` → Algolia-backed search hits
 - `POST /api/chat` with body `{ "message": "What should I prep for launch day?" }`
   - Returns `{ reply, toolResults, usage }`
 - `POST /agent` streams Server-Sent Events (SSE) compatible with the Vercel AI SDK + CometChat adapter. Send `{ messages: [...] }` just like `vercel-knowledge-agent` and you will receive incremental agent events (text deltas, tool traces, completion).
 
 If `PRODUCTHUNT_API_TOKEN` is unset the Product Hunt endpoints return empty arrays, but search and chat remain functional (the agent explains missing data).
+
+Example stream:
+
+```bash
+curl -N http://localhost:3000/agent \
+  -H "Content-Type: application/json" \
+  -d '{
+        "messages": [
+          { "role": "user", "content": "Show me the top Product Hunt launches today." }
+        ],
+        "toolParams": {
+          "timeframe": "today",
+          "timezone": "America/New_York",
+          "limit": 3
+        }
+      }'
+```
 
 ## Agent Details
 
