@@ -1,0 +1,22 @@
+{
+  "name": "product-hunt-agent",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.52",
+    "ai": "^5.0.71",
+    "@cometchat/vercel-adapter": "^0.0.1-beta",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "express": "~4.18.3",
+    "http-errors": "~2.0.0",
+    "jade": "~1.11.0",
+    "luxon": "^3.5.0",
+    "morgan": "~1.10.0",
+    "zod": "^3.23.8"
+  }
+}
